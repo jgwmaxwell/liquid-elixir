@@ -520,12 +520,12 @@ defmodule Liquid.Filters do
 
         # Fallback to custom if no standard or register
         {_, nil, nil, _} ->
-          apply_function(custom_filters[name], name, [value | args])
+          apply_function(custom_filters[name], name, [value | args], context)
 
         {_, nil, filter, _} -> apply_filter(filter, name, [value | args])
 
         _ ->
-          apply_function(Functions, name, [value | args])
+          apply_function(Functions, name, [value | args], context)
       end
 
     filter(rest, context, ret)
@@ -565,11 +565,18 @@ defmodule Liquid.Filters do
     end
   end
 
-  defp apply_function(module, name, args) do
+  defp apply_function(module, name, args, context) do
     try do
-      apply(module, override_filter_name(module, name), args)
+      contextualised_args = if include_context?(module, name) do
+        args ++ [context.assigns]
+      else
+        args
+      end
+
+      apply(module, override_filter_name(module, name), contextualised_args)
     rescue
       e in UndefinedFunctionError ->
+        require IEx; IEx.pry
         functions = module.__info__(:functions)
 
         raise ArgumentError,
@@ -577,9 +584,21 @@ defmodule Liquid.Filters do
     end
   end
 
+  defp include_context?(module, name), do:
+    functions_that_require_context(module)
+    |> Enum.find(&(&1 == name))
+
   defp override_filter_name(module, name), do: filter_name_override_map(module)[name] || name
 
   defp overridden_filter_names(module), do: Map.keys(filter_name_override_map(module))
+
+  defp functions_that_require_context(module) do
+    if function_exists?(module, :functions_that_require_context) do
+      module.functions_that_require_context
+    else
+      []
+    end
+  end
 
   defp filter_name_override_map(module) do
     if function_exists?(module, :filter_name_override_map) do

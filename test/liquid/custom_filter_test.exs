@@ -18,8 +18,13 @@ defmodule Liquid.CustomFilterTest do
     def if_filter(_), do: 43
   end
 
+  defmodule RequiresContext do
+    def functions_that_require_context, do: [:hello]
+    def hello(_something, context), do: context[:hello]
+  end
+
   setup_all do
-    Application.put_env(:liquid, :extra_filter_modules, [MyFilter, MyFilterTwo, FilterNameOverride])
+    Application.put_env(:liquid, :extra_filter_modules, [MyFilter, MyFilterTwo, FilterNameOverride, RequiresContext])
     Liquid.start()
     on_exit(fn -> Liquid.stop() end)
     :ok
@@ -45,6 +50,11 @@ defmodule Liquid.CustomFilterTest do
 
   test "custom filter with name override" do
     assert_template_result("43", "{{ 'something' | if }}")
+  end
+
+  test "custom filter receives context when required" do
+    context = %{hello: "Something"}
+    assert_template_result(context[:hello], "{{ 'does not matter' | hello }}", context)
   end
 
   defp assert_template_result(expected, markup, assigns \\ %{}) do
