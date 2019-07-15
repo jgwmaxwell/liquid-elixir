@@ -27,9 +27,9 @@ defmodule TestFileSystem do
       "pick_a_source" ->
         {:ok, "from TestFileSystem"}
 
-      "assignemnts" ->
+      "price" ->
         {:ok,
-         "{% assign class_name = 'Price Price_type ' | replace: 'type', price.type | append: class %}{{ class_name }}"}
+         "{% assign class_name = 'Price Price_type ' | replace: 'type', locals.price.typename | append: locals.class %}{{ class_name }}"}
 
       "attr_from_param" ->
         {:ok, "{{ some_name }} {{ some_name2 }}"}
@@ -59,11 +59,11 @@ defmodule IncludeTagTest do
     :ok
   end
 
-  test :assignemnts do
+  test :assignments do
     assert_result(
       "Price Price_Fixed some-class",
-      "{% include 'assignemnts', price: product.price, class: 'some-class' %}",
-      %{"product" => %{"price" => %{"type" => "Fixed"}}}
+      "{% include 'price', price: product.price, class: 'some-class' %}",
+      %{"product" => %{"price" => %{"typename" => "Fixed"}}}
     )
   end
 
