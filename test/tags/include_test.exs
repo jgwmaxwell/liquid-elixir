@@ -31,6 +31,9 @@ defmodule TestFileSystem do
         {:ok,
          "{% assign class_name = 'Price Price_type ' | replace: 'type', price.type | append: class %}{{ class_name }}"}
 
+      "attr_from_param" ->
+        {:ok, "{{ some_name }} {{ some_name2 }}"}
+
       _ ->
         {:ok, template_path}
     end
@@ -59,8 +62,16 @@ defmodule IncludeTagTest do
   test :assignemnts do
     assert_result(
       "Price Price_Fixed some-class",
-      "{% include 'assignemnts', price: product.price, class: 'ProductDetail-price' %}",
+      "{% include 'assignemnts', price: product.price, class: 'some-class' %}",
       %{"product" => %{"price" => %{"type" => "Fixed"}}}
+    )
+  end
+
+  test :attr_from_param do
+    assert_result(
+      "var1 var2",
+      "{% include 'attr_from_param', some_name: 'var1', some_name2: 'var2' %}",
+      %{}
     )
   end
 
