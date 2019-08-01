@@ -36,7 +36,7 @@ defmodule Liquid.AssignTest do
 
   test "assign with sort, but elements are structs" do
     assert_result(
-      "asdasd",
+      "\n  \n    9\n  \n    10\n  \n",
       """
       {% assign sorted_elements = elements | sort: 'position' %}
         {% for element in sorted_elements %}
