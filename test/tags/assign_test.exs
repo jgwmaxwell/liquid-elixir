@@ -29,6 +29,33 @@ defmodule Liquid.AssignTest do
     assert_result("test", "{% assign foo = 'test' %}{{foo}}", %{})
   end
 
+  defmodule TestMod do
+    @fields [:position]
+    defstruct @fields
+  end
+
+  test "assign with sort, but elements are structs" do
+    assert_result(
+      "asdasd",
+      """
+      {% assign sorted_elements = elements | sort: 'position' %}
+        {% for element in sorted_elements %}
+          {{ element.position }}
+        {% endfor %}
+      """,
+      %{
+        "elements" => [
+          %TestMod{
+            position: 10
+          },
+          %TestMod{
+            position: 9
+          }
+        ]
+      }
+    )
+  end
+
   defp assert_result(expected, markup, assigns) do
     template = Liquid.Template.parse(markup)
     {:ok, result, _} = Liquid.Template.render(template, assigns)
