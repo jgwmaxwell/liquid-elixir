@@ -212,7 +212,7 @@ defmodule Liquid.FilterTest do
     defstruct @fields
   end
 
-  test :sort_struct do
+  test :sort_structs do
     assert [
              %TestMod{
                position: 9
@@ -225,6 +225,19 @@ defmodule Liquid.FilterTest do
                %TestMod{
                  position: 10
                },
+               %TestMod{
+                 position: 9
+               }
+             ])
+  end
+
+  test :sort_struct do
+    assert [
+             %TestMod{
+               position: 9
+             }
+           ] ==
+             Functions.sort([
                %TestMod{
                  position: 9
                }
