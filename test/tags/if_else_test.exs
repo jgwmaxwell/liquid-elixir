@@ -241,9 +241,30 @@ defmodule Liquid.Tags.IfElseTagTest do
     })
   end
 
-  test :if_with_less do
+  test :if_with_less_sign do
     assert_result("yes", "{% if var < varx %}yes{% endif %}", %{
       "var" => 10,
+      "varx" => 20
+    })
+  end
+
+  test :if_with_gt do
+    assert_result("yes", "{% if var | gt: varx %}yes{% endif %}", %{
+      "var" => 20,
+      "varx" => 10
+    })
+  end
+
+  test :if_with_lte do
+    assert_result("yes", "{% if var | lte: varx %}yes{% endif %}", %{
+      "var" => 10,
+      "varx" => 10
+    })
+  end
+
+  test :if_with_gte do
+    assert_result("yes", "{% if var | gte: varx %}yes{% endif %}", %{
+      "var" => 20,
       "varx" => 20
     })
   end

@@ -78,14 +78,9 @@ defmodule Liquid.IfElse do
     |> Enum.map(&String.trim/1)
     |> Enum.map(fn x ->
       case syntax() |> Regex.scan(x) do
-        [[_, left, operator, right]] ->
-          {left, operator, right}
-
-        [[_, x]] ->
-          x
-
-        a ->
-          raise Liquid.SyntaxError, message: "Check the parenthesis"
+        [[_, left, operator, right]] -> {left, operator, right}
+        [[_, x]] -> x
+        _ -> raise Liquid.SyntaxError, message: "Check the parenthesis"
       end
     end)
   end
@@ -104,6 +99,8 @@ defmodule Liquid.IfElse do
     markup
     |> String.replace("| lt:", "<")
     |> String.replace("| gt:", ">")
+    |> String.replace("| gte:", ">=")
+    |> String.replace("| lte:", "<=")
     |> String.replace("&&", "and")
     |> String.replace("||", "or")
   end
