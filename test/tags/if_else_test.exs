@@ -235,9 +235,30 @@ defmodule Liquid.Tags.IfElseTagTest do
   end
 
   test :if_with_filter do
-    assert_result("yes", "{% if variable | lt: variable2 %}yes{% endif %}", %{
-      "variable" => 10,
-      "variable2" => 20
+    assert_result("yes", "{% if var | lt: varx %}yes{% endif %}", %{
+      "var" => 10,
+      "varx" => 20
+    })
+  end
+
+  test :if_with_less do
+    assert_result("yes", "{% if var < varx %}yes{% endif %}", %{
+      "var" => 10,
+      "varx" => 20
+    })
+  end
+
+  test :if_with_ampersands do
+    assert_result("yes", "{% if var && varx %}yes{% endif %}", %{
+      "var" => true,
+      "varx" => true
+    })
+  end
+
+  test :if_with_pipes do
+    assert_result("yes", "{% if var || varx %}yes{% endif %}", %{
+      "var" => true,
+      "varx" => false
     })
   end
 
