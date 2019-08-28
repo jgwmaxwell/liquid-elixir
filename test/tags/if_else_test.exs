@@ -234,6 +234,13 @@ defmodule Liquid.Tags.IfElseTagTest do
     )
   end
 
+  test :if_with_filter do
+    assert_result("yes", "{% if variable | lt: variable2 %}yes{% endif %}", %{
+      "variable" => 10,
+      "variable2" => 20
+    })
+  end
+
   defp assert_result(expected, markup, assigns \\ %{}) do
     t = Template.parse(markup)
     {:ok, rendered, _} = Template.render(t, assigns)
