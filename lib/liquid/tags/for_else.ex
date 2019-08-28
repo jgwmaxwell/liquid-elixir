@@ -112,9 +112,6 @@ defmodule Liquid.ForElse do
 
     list = if is_binary(list) and list != "", do: [list], else: list
 
-    if is_map(list) do
-    end
-
     list = convert_to_list(list)
 
     if is_list(list) and !is_empty_list(list) do
