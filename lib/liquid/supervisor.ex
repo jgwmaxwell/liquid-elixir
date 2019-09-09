@@ -23,8 +23,8 @@ defmodule Liquid.Supervisor do
         [
           expiration:
             expiration(
-              default: :timer.seconds(600),
-              interval: :timer.seconds(10),
+              default: :timer.hours(12),
+              interval: :timer.hours(12),
               lazy: true
             )
         ]
