@@ -24,8 +24,14 @@ defmodule Liquid.Supervisor do
           expiration:
             expiration(
               default: :timer.hours(12),
-              interval: :timer.hours(12),
+              interval: :timer.minutes(60),
               lazy: true
+            ),
+          limit:
+            limit(
+              size: 5000,
+              policy: Cachex.Policy.LRW,
+              reclaim: 0.1
             )
         ]
       ])
