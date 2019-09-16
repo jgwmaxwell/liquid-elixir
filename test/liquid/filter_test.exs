@@ -6,6 +6,11 @@ defmodule Liquid.FilterTest do
   alias Liquid.{Context, Filters, Template, Variable}
   alias Liquid.Filters.Functions
 
+  setup_all do
+    on_exit(fn -> Application.put_env(:liquid, :custom_filters, %{}) end)
+    :ok
+  end
+
   test :parse_input do
     [name | filters] = "'foofoo' | replace:'foo','bar'" |> Variable.parse()
 

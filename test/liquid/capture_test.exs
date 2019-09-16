@@ -4,6 +4,11 @@ defmodule Liquid.CaptureTest do
   use ExUnit.Case
   alias Liquid.Template
 
+  setup_all do
+    on_exit(fn -> Application.put_env(:liquid, :custom_filters, %{}) end)
+    :ok
+  end
+
   test :test_captures_block_content_in_variable do
     assert_template_result(
       "test string",

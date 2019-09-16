@@ -12,6 +12,12 @@ defmodule Liquid.GlobalFilterTest do
   setup_all do
     Application.put_env(:liquid, :global_filter, &MyFilter.counting_sheeps/1)
     Liquid.add_filter_modules()
+
+    on_exit(fn ->
+      Application.put_env(:liquid, :global_filter, nil)
+      Application.put_env(:liquid, :custom_filters, %{})
+    end)
+
     :ok
   end
 

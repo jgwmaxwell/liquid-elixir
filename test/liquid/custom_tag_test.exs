@@ -17,7 +17,7 @@ defmodule Liquid.CustomTagTest do
 
   setup_all do
     Liquid.Registers.register("minus_one", MinusOneTag, Tag)
-    # Liquid.add_filter_modules()
+    Liquid.add_filter_modules()
     :ok
   end
 
