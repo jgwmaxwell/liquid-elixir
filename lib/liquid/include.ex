@@ -53,6 +53,8 @@ defmodule Liquid.Include do
         Template.parse(source, presets)
       end)
 
+    # IO.inspect("INCLUDE CONTEXTS: #{inspect(Map.get(context, :assigns) |> Map.get(:__contexts))}")
+
     t = %{t | blocks: context.template.blocks ++ t.blocks}
 
     cond do

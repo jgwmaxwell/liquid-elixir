@@ -4,12 +4,6 @@ defmodule Liquid.CaptureTest do
   use ExUnit.Case
   alias Liquid.Template
 
-  setup_all do
-    Liquid.start()
-    on_exit(fn -> Liquid.stop() end)
-    :ok
-  end
-
   test :test_captures_block_content_in_variable do
     assert_template_result(
       "test string",

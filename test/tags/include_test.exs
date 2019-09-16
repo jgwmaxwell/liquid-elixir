@@ -56,9 +56,9 @@ defmodule IncludeTagTest do
   alias Liquid.Context, as: Context
 
   setup_all do
-    Liquid.start()
+    #   Liquid.start()
     Liquid.FileSystem.register(TestFileSystem)
-    on_exit(fn -> Liquid.stop() end)
+    #   on_exit(fn -> Liquid.stop() end)
     :ok
   end
 
