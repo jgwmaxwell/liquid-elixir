@@ -46,12 +46,9 @@ defmodule Liquid.Parse do
 
       true ->
         {result, rest, template} =
-          try do
-            parse_node(h, t, template)
-          rescue
-            # Ignore undefined tags inside comments
-            RuntimeError ->
-              {h, t, template}
+          case parse_node(h, t, template) do
+            nil -> {h, t, template}
+            x -> x
           end
 
         parse(block, rest, accum ++ [result], template)
@@ -144,7 +141,7 @@ defmodule Liquid.Parse do
         {tag, rest, template}
 
       nil ->
-        raise "unregistered tag: #{name} in file: #{filename}"
+        nil
     end
   end
 

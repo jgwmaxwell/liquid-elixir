@@ -529,15 +529,15 @@ defmodule Liquid.Filters do
     custom_filters = Application.get_env(:liquid, :custom_filters)
     registered_filters = context |> Context.registers(:filters)
 
-    ret =
+    {status, ret} =
       case {name, functions[name], registered_filters[name], custom_filters[name]} do
         # pass value in case of no filters
         {nil, _, _, _} ->
-          value
+          {:ok, value}
 
         # pass non-existend filter
         {name, nil, nil, nil} ->
-          "Liquid error: Non-existing filter used: #{name}"
+          {:error, "Liquid error: non-existing filter used: #{name}"}
 
         # Fallback to custom if no standard or register
         {_, nil, nil, _} ->
@@ -550,7 +550,10 @@ defmodule Liquid.Filters do
           apply_function(Functions, name, [value | args], filename)
       end
 
-    filter(rest, context, ret)
+    case status do
+      :ok -> filter(rest, context, ret)
+      :error -> ret
+    end
   end
 
   defp extract_filename_from_context(%{template: %{filename: filename}}), do: filename
@@ -583,27 +586,19 @@ defmodule Liquid.Filters do
   end
 
   defp apply_filter(func, name, args, filename) do
-    try do
-      apply(func, args)
-    rescue
-      _ in BadArityError ->
-        "Liquid error: wrong number of arguments to #{name}, filename: #{filename}"
-    end
+    if :erlang.fun_info(func)[:arity] == Enum.count(args),
+      do: {:ok, apply(func, args)},
+      else: {:error, "Liquid error: wrong number of arguments to #{name}, filename: #{filename}"}
   end
 
   defp apply_function(module, name, args, filename) do
-    try do
-      apply(module, override_filter_name(module, name), args)
-    rescue
-      e in UndefinedFunctionError ->
-        functions = module.__info__(:functions)
-
-        raise ArgumentError,
-          message:
-            "Liquid error: wrong number of arguments (#{e.arity} for #{functions[name]}), filename: #{
-              filename
-            }"
-    end
+    if Kernel.function_exported?(module, override_filter_name(module, name), Enum.count(args)),
+      do: {:ok, apply(module, override_filter_name(module, name), args)},
+      else:
+        {:error,
+         "Liquid error: wrong number of arguments (#{Enum.count(args)} for #{name}), filename: #{
+           filename
+         }"}
   end
 
   defp override_filter_name(module, name), do: filter_name_override_map(module)[name] || name
