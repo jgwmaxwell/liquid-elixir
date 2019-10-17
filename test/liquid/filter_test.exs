@@ -471,7 +471,7 @@ defmodule Liquid.FilterTest do
 
   test :filters_error_wrong_in_chain do
     assert_template_result(
-      "variable: 'text', error: Liquid error: wrong number of arguments (2 for 1), filename: root",
+      "Liquid error: wrong number of arguments (2 for upcase), filename: root",
       "{{ 'text' | upcase:1 | nonexisting | capitalize }}"
     )
   end
