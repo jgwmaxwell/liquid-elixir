@@ -46,9 +46,14 @@ defmodule Liquid do
   def handle_call({:registers}, options), do:
     {:reply, Keyword.get(options, :extra_tags), options}
 
-    def handle_call({:registers_lookup, name}, _from, options) do
-      {:reply, Liquid.Registers.lookup(name, options), options}
-    end
+  def handle_call({:registers_lookup, name}, _from, options), do:
+        {:reply, Liquid.Registers.lookup(name, options), options}
+
+  def handle_call({:read_template_file, path, extra_options}, _from, options), do:
+    {:reply, Liquid.FileSystem.read_template_file(path, Keyword.merge(options, extra_options)), options}
+
+    def handle_call({:full_path, path, extra_options}, _from, options), do:
+    {:reply, Liquid.FileSystem.full_path(path, Keyword.merge(options, extra_options)), options}
 
   def handle_cast({:register_tags, tag_name, module, type}, options) do
     custom_tags = Keyword.get(options, :extra_tags, %{})
@@ -102,7 +107,13 @@ defmodule Liquid do
   def add_filters(name, filter_module), do:
     GenServer.cast(name, {:add_filters, filter_module})
 
-    defp overridden_filter_names(module), do: Map.keys(filter_name_override_map(module))
+  def read_template_file(name, path, extra_options \\ []), do:
+    GenServer.call(name, {:read_template_file, path, extra_options}, @timeout)
+
+  def full_path(name, path, extra_options \\ []), do:
+    GenServer.call(name, {:full_path, path, extra_options}, @timeout)
+
+  defp overridden_filter_names(module), do: Map.keys(filter_name_override_map(module))
 
 
   defp filter_name_override_map(module) do
