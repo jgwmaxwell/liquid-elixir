@@ -100,7 +100,7 @@ defmodule Liquid do
   def registers_lookup(name, tag_name), do: GenServer.call(name, {:registers_lookup, tag_name}, @timeout)
 
   def add_filters(name, filter_module), do:
-    GenServer.cast(name, {:add_filter_modules, filter_module})
+    GenServer.cast(name, {:add_filters, filter_module})
 
     defp overridden_filter_names(module), do: Map.keys(filter_name_override_map(module))
 
