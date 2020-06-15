@@ -11,7 +11,7 @@ defimpl Liquid.Matcher, for: Liquid.Context do
 
   def match(current, []), do: current
 
-  def match(%{assigns: assigns, presets: presets}, [key | _] = parts)
+  def match(%{assigns: assigns, presets: presets} = c, [key | _] = parts)
       when is_binary(key) do
     current =
       cond do

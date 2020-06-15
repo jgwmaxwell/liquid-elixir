@@ -80,7 +80,7 @@ defmodule Liquid do
   def render_template(name, template, context \\ %{}), do:
     GenServer.call(name, {:render_template, template, context}, @timeout)
 
-  def parse_template(name, source, presets \\ []), do:
+  def parse_template(name, source, presets \\ %{}), do:
     GenServer.call(name, {:parse_template, source, presets}, @timeout)
 
   def register_file_system(name, module, path), do:

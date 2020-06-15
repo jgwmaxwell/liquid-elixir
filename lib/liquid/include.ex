@@ -64,14 +64,14 @@ defmodule Liquid.Include do
     cond do
       !is_nil(parts[:variable]) ->
         {item, context} = Variable.lookup(parts[:variable], %{context | assigns: assigns}, options)
-        render_item(output, name, item, t, context)
+        render_item(output, name, item, t, context, options)
 
       !is_nil(parts[:foreach]) ->
         {items, context} = Variable.lookup(parts[:foreach], %{context | assigns: assigns}, options)
-        render_list(output, name, items, t, context)
+        render_list(output, name, items, t, context, options)
 
       true ->
-        render_item(output, name, nil, t, %{context | assigns: assigns})
+        render_item(output, name, nil, t, %{context | assigns: assigns}, options)
     end
   end
 
@@ -93,24 +93,24 @@ defmodule Liquid.Include do
     end)
   end
 
-  defp render_list(output, _, [], _, context) do
+  defp render_list(output, _, [], _, context, _options) do
     {output, context}
   end
 
-  defp render_list(output, key, [item | rest], template, %Context{} = context) do
-    {output, context} = render_item(output, key, item, template, context)
-    render_list(output, key, rest, template, context)
+  defp render_list(output, key, [item | rest], template, %Context{} = context, options) do
+    {output, context} = render_item(output, key, item, template, context, options)
+    render_list(output, key, rest, template, context, options)
   end
 
-  defp render_item(output, _key, nil, template, %Context{} = context) do
-    {:ok, rendered, _} = Template.render(template, context)
+  defp render_item(output, _key, nil, template, %Context{} = context, options) do
+    {:ok, rendered, _} = Template.render(template, context, options)
     {[rendered] ++ output, context}
   end
 
-  defp render_item(output, key, item, template, %Context{} = context) do
+  defp render_item(output, key, item, template, %Context{} = context, options) do
     assigns = context.assigns |> Map.merge(%{key => item})
 
-    {:ok, rendered, _} = Template.render(template, %{context | assigns: assigns})
+    {:ok, rendered, _} = Template.render(template, %{context | assigns: assigns}, options)
     {[rendered] ++ output, context}
   end
 end
