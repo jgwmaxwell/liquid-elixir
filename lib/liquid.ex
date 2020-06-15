@@ -77,7 +77,7 @@ defmodule Liquid do
     {:noreply, new_options}
   end
 
-  def render_template(name, template, context), do:
+  def render_template(name, template, context \\ %{}), do:
     GenServer.call(name, {:render_template, template, context}, @timeout)
 
   def parse_template(name, source, presets \\ []), do:

@@ -491,7 +491,7 @@ defmodule Liquid.Filters do
   @doc """
   Recursively pass through all of the input filters applying them
   """
-  def filter([], _, value), do: value
+  def filter([], _, value, options), do: value
 
   def filter([filter | rest], context, value, options) do
     [name, args] = filter
@@ -550,7 +550,7 @@ defmodule Liquid.Filters do
           apply_function(Functions, name, [value | args], filename)
       end
 
-    filter(rest, context, ret)
+    filter(rest, context, ret, options)
   end
 
   defp extract_filename_from_context(%{template: %{filename: filename}}), do: filename

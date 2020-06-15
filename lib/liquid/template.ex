@@ -20,12 +20,6 @@ defmodule Liquid.Template do
     Render.render(t, c, options)
   end
 
-  def render(%Template{} = t, assigns, options), do: render(t, assigns, options)
-
-  def render(_, _, _) do
-    raise Liquid.SyntaxError, message: "You can use only maps/structs to hold context data"
-  end
-
   def render(%Template{} = t, %Context{global_filter: _global_filter} = context, options) do
     registers = Keyword.get(options, :registers, %{})
     context = %{context | registers: registers}
@@ -52,6 +46,10 @@ defmodule Liquid.Template do
       end
 
     render(t, context, options)
+  end
+
+  def render(_, _, _) do
+    raise Liquid.SyntaxError, message: "You can use only maps/structs to hold context data"
   end
 
   @doc """

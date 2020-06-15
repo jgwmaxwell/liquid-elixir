@@ -34,7 +34,7 @@ defmodule Liquid.Variable do
 
     result =
       try do
-        {:ok, filters |> Filters.filter(context, ret) |> apply_global_filter(context)}
+        {:ok, filters |> Filters.filter(context, ret, options) |> apply_global_filter(context)}
       rescue
         e in UndefinedFunctionError ->
           {e, "variable: #{v.name}, error: #{e.reason}"}
