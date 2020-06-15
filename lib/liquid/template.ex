@@ -40,7 +40,7 @@ defmodule Liquid.Template do
         _ ->
           %{
             context
-            | global_filter: Keyword.get(options, :global_filter, %{}),
+            | global_filter: Keyword.get(options, :global_filter, nil),
               extra_tags: Keyword.get(options, :extra_tags, %{})
           }
       end

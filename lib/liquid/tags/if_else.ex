@@ -54,7 +54,7 @@ defmodule Liquid.IfElse do
     end
   end
 
-  def render(output, %Tag{}, context, options) do
+  def render(output, %Tag{}, context, _options) do
     {output, context}
   end
 
@@ -66,11 +66,12 @@ defmodule Liquid.IfElse do
   def render(
         output,
         %Block{condition: condition, nodelist: nodelist, elselist: elselist, blank: false},
-        context, options
+        context,
+        options
       ) do
     condition = Condition.evaluate(condition, context, options)
     conditionlist = if condition, do: nodelist, else: elselist
-    Render.render(output, conditionlist, context)
+    Render.render(output, conditionlist, context, options)
   end
 
   defp split_conditions(expressions) do

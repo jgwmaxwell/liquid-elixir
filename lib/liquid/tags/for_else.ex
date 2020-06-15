@@ -118,7 +118,7 @@ defmodule Liquid.ForElse do
       list = if it.reversed, do: Enum.reverse(list), else: list
       {limit, context} = lookup_limit(it, context, options)
       {offset, context} = lookup_offset(it, context, options)
-      each(output, [make_ref(), limit, offset], list, block, context)
+      each(output, [make_ref(), limit, offset], list, block, context, options)
     else
       Render.render(output, block.elselist, context, options)
     end
@@ -158,7 +158,7 @@ defmodule Liquid.ForElse do
   def each(output, _, [], %Block{} = block, %Context{} = context, options),
     do: {output, remember_limit(block, context, options)}
 
-  def each(output, [prev, limit, offset], [h | t] = list, %Block{} = block, %Context{} = context) do
+  def each(output, [prev, limit, offset], [h | t] = list, %Block{} = block, %Context{} = context, options)   do
     forloop = next_forloop(block.iterator, list)
     block = %{block | iterator: %{block.iterator | forloop: forloop}}
 
@@ -173,7 +173,7 @@ defmodule Liquid.ForElse do
       render_content(output, block, %{context | assigns: assigns, registers: registers}, [
         limit,
         offset
-      ])
+      ], options)
 
     t = if block_context.break == true, do: [], else: t
 
@@ -181,18 +181,19 @@ defmodule Liquid.ForElse do
       context
       | assigns: block_context.assigns,
         registers: block_context.registers
-    })
+    }, options)
   end
 
   defp render_content(
          output,
          %Block{iterator: %{forloop: %{"index" => index}}, nodelist: nodelist, blank: blank},
          context,
-         [limit, offset]
+         [limit, offset],
+         options
        ) do
     case {should_render?(limit, offset, index), blank} do
       {true, true} ->
-        {_, new_context} = Render.render([], nodelist, context)
+        {_, new_context} = Render.render([], nodelist, context, options)
         {output, new_context}
 
       {true, _} ->

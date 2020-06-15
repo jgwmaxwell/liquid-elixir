@@ -47,13 +47,13 @@ defmodule Liquid.Registers do
     end
   end
 
-  def lookup(_, options), do: nil
+  def lookup(_, _), do: nil
 
   def lookup(name, context, options) when is_binary(name) do
-    name |> String.to_atom() |> lookup(context)
+    name |> String.to_atom() |> lookup(context, options)
   end
 
-  def lookup(name, %{extra_tags: extra_tags}, options) do
+  def lookup(name, %{extra_tags: extra_tags}, _options) do
     custom_tag = Map.get(extra_tags, name)
 
     case {name, Map.get(@default_tags, name), custom_tag} do
@@ -64,5 +64,5 @@ defmodule Liquid.Registers do
     end
   end
 
-  def lookup(_, _), do: nil
+  def lookup(_, _, _), do: nil
 end
