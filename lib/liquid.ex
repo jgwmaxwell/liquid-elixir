@@ -106,13 +106,6 @@ defmodule Liquid do
   def variable_parser, do: ~r/\[[^\]]+\]|[\w\-]+/
   def filter_parser, do: ~r/(?:\||(?:\s*(?!(?:\|))(?:#{quoted_fragment()}|\S+)\s*)+)/
 
-  defp ensure_unused(name) do
-    case GenServer.whereis(name) do
-      nil -> {:ok, true}
-      pid -> {:error, {:already_started, pid}}
-    end
-  end
-
   defmodule List do
     def even_elements([_, h | t]) do
       [h] ++ even_elements(t)
