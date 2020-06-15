@@ -4,14 +4,14 @@ defmodule FileSystemTest do
   use ExUnit.Case
 
   test :default do
-    start_supervised!({Liquid, [name: :default]})
+    start_supervised!({Liquid.Process,[name: :default]})
     Liquid.register_file_system(:default, Liquid.BlankFileSystem, "/")
 
     {:error, _reason} = Liquid.read_template_file(:default, "dummy", dummy: "smarty")
   end
 
   test :local do
-    start_supervised!({Liquid, [name: :local]})
+    start_supervised!({Liquid.Process,[name: :local]})
     Liquid.register_file_system(:local, Liquid.LocalFileSystem, "/some/path")
 
     {:ok, path} = Liquid.full_path(:local, "mypartial")
