@@ -18,19 +18,19 @@ defmodule Liquid do
   def init(options), do: {:ok, options}
 
   def handle_call(
-        {:render_template, template, context},
+        {:render_template, template, context, extra_options},
         _from,
         options
       ) do
-    {:reply, Liquid.Template.render(template, context, options), options}
+    {:reply, Liquid.Template.render(template, context, Keyword.merge(options, extra_options)), options}
   end
 
   def handle_call(
-        {:parse_template, source, presets},
+        {:parse_template, source, presets, extra_options},
         _from,
         options
       ) do
-    reply = Liquid.Template.parse(source, presets, options)
+    reply = Liquid.Template.parse(source, presets, Keyword.merge(options, extra_options))
     {:reply, reply, options}
   end
 
@@ -46,8 +46,8 @@ defmodule Liquid do
 
   def handle_call({:registers}, options), do: {:reply, Keyword.get(options, :extra_tags), options}
 
-  def handle_call({:registers_lookup, name}, _from, options),
-    do: {:reply, Liquid.Registers.lookup(name, options), options}
+  def handle_call({:registers_lookup, name, extra_options}, _from, options),
+    do: {:reply, Liquid.Registers.lookup(name, Keyword.merge(options, extra_options)), options}
 
   def handle_call({:read_template_file, path, extra_options}, _from, options),
     do:
@@ -84,11 +84,11 @@ defmodule Liquid do
     {:noreply, new_options}
   end
 
-  def render_template(name, template, context \\ %{}),
-    do: GenServer.call(name, {:render_template, template, context}, @timeout)
+  def render_template(name, template, context \\ %{}, extra_options \\ []),
+    do: GenServer.call(name, {:render_template, template, context, extra_options}, @timeout)
 
-  def parse_template(name, source, presets \\ %{}),
-    do: GenServer.call(name, {:parse_template, source, presets}, @timeout)
+  def parse_template(name, source, presets \\ %{}, extra_options \\ []),
+    do: GenServer.call(name, {:parse_template, source, presets, extra_options}, @timeout)
 
   def register_file_system(name, module, path),
     do: GenServer.cast(name, {:register_file_system, module, path})
@@ -100,7 +100,7 @@ defmodule Liquid do
   def register_tags(name, tag_name, module, type),
     do: GenServer.cast(name, {:register_tags, tag_name, module, type})
 
-  def registers(name, tag_name, module, type), do: GenServer.call(name, {:registers}, @timeout)
+  def registers(name), do: GenServer.call(name, {:registers}, @timeout)
 
   def registers_lookup(name, tag_name),
     do: GenServer.call(name, {:registers_lookup, tag_name}, @timeout)
