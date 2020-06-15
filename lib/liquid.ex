@@ -17,6 +17,9 @@ defmodule Liquid do
   @impl true
   def init(options), do: {:ok, options}
 
+  @impl true
+  def handle_call(tuple, from, options)
+
   def handle_call(
         {:render_template, template, context, extra_options},
         _from,
@@ -34,16 +37,6 @@ defmodule Liquid do
     {:reply, reply, options}
   end
 
-  def handle_cast({:register_file_system, module, path}, options) do
-    new_options = Keyword.put(options, :file_system, {module, path})
-    {:noreply, new_options}
-  end
-
-  def handle_cast({:clear_registers}, options) do
-    new_options = Keyword.put(options, :extra_tags, %{})
-    {:noreply, new_options}
-  end
-
   def handle_call({:registers}, options), do: {:reply, Keyword.get(options, :extra_tags), options}
 
   def handle_call({:registers_lookup, name, extra_options}, _from, options),
@@ -57,6 +50,19 @@ defmodule Liquid do
   def handle_call({:full_path, path, extra_options}, _from, options),
     do:
       {:reply, Liquid.FileSystem.full_path(path, Keyword.merge(options, extra_options)), options}
+
+  @impl true
+  def handle_cast(tuple, options)
+
+  def handle_cast({:register_file_system, module, path}, options) do
+    new_options = Keyword.put(options, :file_system, {module, path})
+    {:noreply, new_options}
+  end
+
+  def handle_cast({:clear_registers}, options) do
+    new_options = Keyword.put(options, :extra_tags, %{})
+    {:noreply, new_options}
+  end
 
   def handle_cast({:register_tags, tag_name, module, type}, options) do
     custom_tags = Keyword.get(options, :extra_tags, %{})
