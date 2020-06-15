@@ -77,7 +77,7 @@ defmodule Liquid.BlockTest do
 
   test "with custom tag" do
     Liquid.register_tags(:liquid, "testtag", TestTag, Liquid.Tag)
-    template =  Liquid.parse_template(:liquid, "{% testtag %}")
+    template = Liquid.parse_template(:liquid, "{% testtag %}")
     assert [%Liquid.Tag{name: :testtag}] = template.root.nodelist
   end
 

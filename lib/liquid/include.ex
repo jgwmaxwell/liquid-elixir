@@ -63,11 +63,15 @@ defmodule Liquid.Include do
 
     cond do
       !is_nil(parts[:variable]) ->
-        {item, context} = Variable.lookup(parts[:variable], %{context | assigns: assigns}, options)
+        {item, context} =
+          Variable.lookup(parts[:variable], %{context | assigns: assigns}, options)
+
         render_item(output, name, item, t, context, options)
 
       !is_nil(parts[:foreach]) ->
-        {items, context} = Variable.lookup(parts[:foreach], %{context | assigns: assigns}, options)
+        {items, context} =
+          Variable.lookup(parts[:foreach], %{context | assigns: assigns}, options)
+
         render_list(output, name, items, t, context, options)
 
       true ->
@@ -81,7 +85,9 @@ defmodule Liquid.Include do
         source
 
       {:error, error_value} ->
-        Keyword.get(options, :error_handler, Liquid.Prod.ErrorHandler).handle(error_value, name: name)
+        Keyword.get(options, :error_handler, Liquid.Prod.ErrorHandler).handle(error_value,
+          name: name
+        )
     end
   end
 

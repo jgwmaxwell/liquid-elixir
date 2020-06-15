@@ -23,7 +23,10 @@ defmodule Liquid.Cycle do
   def render(output, %Tag{parts: [name | values]}, %Context{} = context, options) do
     {name, context} = Variable.lookup(%Variable{parts: [], literal: name}, context, options)
     name = to_string(name) <> "_liquid_cycle"
-    {rendered, context} = Variable.lookup(%Variable{parts: [name], literal: nil}, context, options)
+
+    {rendered, context} =
+      Variable.lookup(%Variable{parts: [name], literal: nil}, context, options)
+
     index = rendered || 0
     {value, context} = values |> Enum.fetch!(index) |> get_value_from_context(context, options)
     new_index = rem(index + 1, Enum.count(values))

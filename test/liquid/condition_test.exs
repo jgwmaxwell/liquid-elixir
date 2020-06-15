@@ -71,7 +71,7 @@ defmodule ConditionTest do
 
   test :or_condition do
     condition = Condition.create({"1", "==", "2"})
-    assert false == Condition.evaluate(condition, []  )
+    assert false == Condition.evaluate(condition, [])
     condition = Condition.join(:or, condition, {"2", "==", "2"})
     assert true == Condition.evaluate(condition, [])
     condition = Condition.join(:or, condition, {"2", "==", "1"})

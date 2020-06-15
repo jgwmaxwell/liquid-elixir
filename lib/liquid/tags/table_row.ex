@@ -96,7 +96,8 @@ defmodule Liquid.TableRow do
 
   defp parse_collection(list, context, _options) when is_list(list), do: {list, context}
 
-  defp parse_collection(%Variable{} = variable, context, options), do: Variable.lookup(variable, context, options)
+  defp parse_collection(%Variable{} = variable, context, options),
+    do: Variable.lookup(variable, context, options)
 
   defp parse_collection(%RangeLookup{} = range, context, options),
     do: {RangeLookup.parse(range, context, options), context}
@@ -121,21 +122,34 @@ defmodule Liquid.TableRow do
       |> Map.put(it.item, h)
       |> Map.put("changed", {prev, h})
 
-    {output_addition, block_context} = render_content(block, context, assigns, limit, offset, options)
+    {output_addition, block_context} =
+      render_content(block, context, assigns, limit, offset, options)
 
     output = output_addition ++ output
     t = if block_context.break == true, do: [], else: t
-    each(output, [h, limit, offset], t, block, %{context | assigns: block_context.assigns}, options)
+
+    each(
+      output,
+      [h, limit, offset],
+      t,
+      block,
+      %{context | assigns: block_context.assigns},
+      options
+    )
   end
 
   defp render_content(%Block{iterator: it} = block, context, assigns, limit, offset, options) do
     case {should_render?(limit, offset, it.forloop["index"]), block.blank} do
       {true, true} ->
-        {_, new_context} = Render.render([], block.nodelist, %{context | assigns: assigns}, options)
+        {_, new_context} =
+          Render.render([], block.nodelist, %{context | assigns: assigns}, options)
+
         {[], new_context}
 
       {true, _} ->
-        {rendered, new_context} = Render.render([], block.nodelist, %{context | assigns: assigns}, options)
+        {rendered, new_context} =
+          Render.render([], block.nodelist, %{context | assigns: assigns}, options)
+
         {rendered |> add_rows_data(it.forloop), new_context}
 
       _ ->
@@ -166,8 +180,12 @@ defmodule Liquid.TableRow do
   defp lookup_limit(%Iterator{limit: limit}, %Context{} = context, options),
     do: Variable.lookup(limit, context, options)
 
-  defp lookup_offset(%Iterator{offset: %Variable{name: "continue"}} = it, %Context{} = context, options),
-    do: {context.offsets[it.name] || 0, context}
+  defp lookup_offset(
+         %Iterator{offset: %Variable{name: "continue"}} = it,
+         %Context{} = context,
+         options
+       ),
+       do: {context.offsets[it.name] || 0, context}
 
   defp lookup_offset(%Iterator{offset: offset}, %Context{} = context, options),
     do: Variable.lookup(offset, context, options)

@@ -158,7 +158,14 @@ defmodule Liquid.ForElse do
   def each(output, _, [], %Block{} = block, %Context{} = context, options),
     do: {output, remember_limit(block, context, options)}
 
-  def each(output, [prev, limit, offset], [h | t] = list, %Block{} = block, %Context{} = context, options)   do
+  def each(
+        output,
+        [prev, limit, offset],
+        [h | t] = list,
+        %Block{} = block,
+        %Context{} = context,
+        options
+      ) do
     forloop = next_forloop(block.iterator, list)
     block = %{block | iterator: %{block.iterator | forloop: forloop}}
 
@@ -170,18 +177,31 @@ defmodule Liquid.ForElse do
     registers = context.registers |> Map.put("changed", {prev, h})
 
     {output, block_context} =
-      render_content(output, block, %{context | assigns: assigns, registers: registers}, [
-        limit,
-        offset
-      ], options)
+      render_content(
+        output,
+        block,
+        %{context | assigns: assigns, registers: registers},
+        [
+          limit,
+          offset
+        ],
+        options
+      )
 
     t = if block_context.break == true, do: [], else: t
 
-    each(output, [h, limit, offset], t, block, %{
-      context
-      | assigns: block_context.assigns,
-        registers: block_context.registers
-    }, options)
+    each(
+      output,
+      [h, limit, offset],
+      t,
+      block,
+      %{
+        context
+        | assigns: block_context.assigns,
+          registers: block_context.registers
+      },
+      options
+    )
   end
 
   defp render_content(
@@ -204,7 +224,11 @@ defmodule Liquid.ForElse do
     end
   end
 
-  defp remember_limit(%Block{iterator: %{name: name} = it}, %{offsets: offsets} = context, options) do
+  defp remember_limit(
+         %Block{iterator: %{name: name} = it},
+         %{offsets: offsets} = context,
+         options
+       ) do
     {rendered, context} = lookup_limit(it, context, options)
     limit = rendered || 0
     remembered = Map.get(offsets, name, 0)
@@ -221,7 +245,8 @@ defmodule Liquid.ForElse do
 
   defp lookup_offset(
          %Iterator{offset: %Variable{name: "continue"}, name: name},
-         %Context{offsets: offsets} = context, _options
+         %Context{offsets: offsets} = context,
+         _options
        ) do
     {Map.get(offsets, name, 0), context}
   end

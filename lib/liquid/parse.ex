@@ -63,7 +63,13 @@ defmodule Liquid.Parse do
     raise "No matching end for block {% #{to_string(name)} %} in file: #{filename}"
   end
 
-  def parse(%Block{name: name} = block, [h | t], accum, %Template{filename: filename} = template, options) do
+  def parse(
+        %Block{name: name} = block,
+        [h | t],
+        accum,
+        %Template{filename: filename} = template,
+        options
+      ) do
     endblock = "end" <> to_string(name)
 
     cond do

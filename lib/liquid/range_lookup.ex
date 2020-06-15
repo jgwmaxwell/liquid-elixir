@@ -20,7 +20,8 @@ defmodule Liquid.RangeLookup do
 
   def parse(
         %RangeLookup{range_start: range_start, range_end: %Variable{} = range_end},
-        %Context{} = context, options
+        %Context{} = context,
+        options
       ) do
     {rendered_right, _} = Variable.lookup(range_end, context, options)
     right = valid_range_value(rendered_right, range_start)
@@ -30,7 +31,8 @@ defmodule Liquid.RangeLookup do
 
   def parse(
         %RangeLookup{range_start: %Variable{} = range_start, range_end: range_end},
-        %Context{} = context, options
+        %Context{} = context,
+        options
       ) do
     {rendered_left, _} = Variable.lookup(range_start, context, options)
     left = valid_range_value(rendered_left)

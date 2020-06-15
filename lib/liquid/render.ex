@@ -19,8 +19,11 @@ defmodule Liquid.Render do
     {output, context} = render(output, h, context, options)
 
     case context do
-      %Context{extended: false, break: false, continue: false} -> render(output, t, context, options)
-      _ -> render(output, [], context, options)
+      %Context{extended: false, break: false, continue: false} ->
+        render(output, t, context, options)
+
+      _ ->
+        render(output, [], context, options)
     end
   end
 
