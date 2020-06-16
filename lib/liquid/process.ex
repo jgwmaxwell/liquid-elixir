@@ -2,14 +2,15 @@ defmodule Liquid.Process do
   use GenServer
 
   def start_link(name, options) do
-    GenServer.start_link(__MODULE__, options, name: name)
+    GenServer.start_link(__MODULE__, augment_options(options), name: name)
   end
 
   def start_link(options) do
     {name, options} = Keyword.pop(options, :name)
 
-    GenServer.start_link(__MODULE__, options, name: name)
+    GenServer.start_link(__MODULE__, augment_options(options), name: name)
   end
+
 
   @impl true
   def init(options), do: {:ok, options}
@@ -107,4 +108,19 @@ defmodule Liquid.Process do
   end
 
   defp function_exists?(module, func), do: Keyword.has_key?(module.__info__(:functions), func)
+
+  defp augment_options(options) do
+    custom_filters = Keyword.get(options, :custom_filters, %{})
+    filter_modules = Keyword.get(options, :filter_modules, [])
+
+    custom_filters = Enum.reduce(filter_modules, custom_filters, fn module, acc ->
+        module.__info__(:functions)
+        |> Keyword.keys()
+        |> Kernel.++(overridden_filter_names(module))
+        |> Enum.into(%{}, fn filter_name -> {filter_name, module} end)
+        |> Map.merge(acc)
+      end)
+
+    Keyword.put(options, :custom_filters, custom_filters)
+  end
 end

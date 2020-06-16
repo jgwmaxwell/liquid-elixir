@@ -91,8 +91,6 @@ defmodule Liquid.TemplateTest do
     {:ok, rendered, context} =
       Liquid.render_template(:liquid, t, %{"foo" => "from assigns"}, registers: %{test: "hallo"})
 
-    IO.inspect(context)
-
     assert "from assigns" == rendered
     assert %{test: "hallo"} == context.registers
   end
