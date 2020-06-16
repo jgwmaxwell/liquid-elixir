@@ -10,7 +10,7 @@ defmodule Liquid.Template do
   Function that renders passed template and context to string
   """
   @file "render.ex"
-  @spec render(Liquid.Template, map) :: String.t()
+  @spec render(Liquid.Template, map, Keyword.t()) :: String.t()
   def render(t, c \\ %{}, options)
 
   def render(%Template{} = t, %Context{} = c, options) do
