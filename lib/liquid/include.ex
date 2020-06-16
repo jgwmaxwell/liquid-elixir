@@ -48,9 +48,10 @@ defmodule Liquid.Include do
 
     cache_adapter = Keyword.get(options, :cache_adapter, Liquid.NoCacheAdapter)
 
+    # todo: probably use options as a cache keys also?
     {_, t} =
       cache_adapter.fetch(:parsed_template, "parsed_template|#{source_hash}", fn _ ->
-        Template.parse(source, %{}, name)
+        Template.parse(source, %{}, name, options)
       end)
 
     if is_binary(t) do
