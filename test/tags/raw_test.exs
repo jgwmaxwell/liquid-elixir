@@ -5,6 +5,11 @@ defmodule Liquid.RawTest do
 
   alias Liquid.Template, as: Template
 
+  setup do
+    start_supervised!({Liquid.Process,[name: :liquid]})
+    :ok
+  end
+
   test :test_tag_in_raw do
     assert_template_result(
       "{% comment %} test {% endcomment %}",
@@ -51,9 +56,8 @@ defmodule Liquid.RawTest do
   end
 
   defp assert_result(expected, markup, assigns) do
-    template = Template.parse(markup)
-
-    {:ok, result, _} = Template.render(template, assigns)
-    assert result == expected
+    t = Liquid.parse_template(:liquid, markup)
+    {:ok, rendered, _} = Liquid.render_template(:liquid, t, assigns)
+    assert rendered == expected
   end
 end

@@ -5,6 +5,11 @@ defmodule StandardTagTest do
 
   alias Liquid.Template
 
+  setup do
+    start_supervised!({Liquid.Process,[name: :liquid]})
+    :ok
+  end
+
   test :test_no_transform do
     assert_template_result(
       "this text should come out of the template without change...",
@@ -274,22 +279,22 @@ defmodule StandardTagTest do
     code =
       "{% case collection.handle %}{% when 'menswear-jackets' %}{% assign ptitle = 'menswear' %}{% when 'menswear-t-shirts' %}{% assign ptitle = 'menswear' %}{% else %}{% assign ptitle = 'womenswear' %}{% endcase %}{{ ptitle }}"
 
-    template = Liquid.Template.parse(code)
+    template = Liquid.parse_template(:liquid, code)
 
     {:ok, result, _} =
-      Template.render(template, %{"collection" => %{"handle" => "menswear-jackets"}})
+      Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "menswear-jackets"}})
 
     assert "menswear" == result
 
     {:ok, result, _} =
-      Template.render(template, %{"collection" => %{"handle" => "menswear-t-shirts"}})
+      Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "menswear-t-shirts"}})
 
     assert "menswear" == result
-    {:ok, result, _} = Template.render(template, %{"collection" => %{"handle" => "x"}})
+    {:ok, result, _} = Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "x"}})
     assert "womenswear" == result
-    {:ok, result, _} = Template.render(template, %{"collection" => %{"handle" => "y"}})
+    {:ok, result, _} = Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "y"}})
     assert "womenswear" == result
-    {:ok, result, _} = Template.render(template, %{"collection" => %{"handle" => "z"}})
+    {:ok, result, _} = Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "z"}})
     assert "womenswear" == result
   end
 
@@ -469,8 +474,8 @@ defmodule StandardTagTest do
   end
 
   defp assert_result(expected, markup, assigns) do
-    t = Template.parse(markup)
-    {:ok, rendered, _} = Template.render(t, assigns)
+    t = Liquid.parse_template(:liquid, markup)
+    {:ok, rendered, _} = Liquid.render_template(:liquid, t, assigns)
     assert rendered == expected
   end
 end
