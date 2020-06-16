@@ -3,8 +3,6 @@ Code.require_file("../../test_helper.exs", __ENV__.file)
 defmodule Liquid.RawTest do
   use ExUnit.Case
 
-  alias Liquid.Template, as: Template
-
   setup do
     start_supervised!({Liquid.Process, [name: :liquid]})
     :ok

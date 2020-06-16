@@ -4,14 +4,14 @@ defmodule Liquid do
   def render_template(name, template, context \\ %{}, extra_options \\ []) do
     case GenServer.call(name, {:render_template, template, context, extra_options}, @timeout) do
       {:ok, v} -> v
-      {:error, error} -> raise error
+      {:error, error, stacktrace} -> reraise error, stacktrace
     end
   end
 
   def parse_template(name, source, presets \\ %{}, extra_options \\ []) do
     case GenServer.call(name, {:parse_template, source, presets, extra_options}, @timeout) do
       {:ok, v} -> v
-      {:error, error} -> raise error
+      {:error, error, stacktrace} -> reraise error, stacktrace
     end
   end
 

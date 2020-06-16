@@ -26,7 +26,7 @@ defmodule Liquid.Process do
       output = Liquid.Template.render(template, context, Keyword.merge(options, extra_options))
       {:reply, {:ok, output}, options}
     rescue
-      x -> {:reply, {:error, x}, options}
+      x -> {:reply, {:error, x, __STACKTRACE__}, options}
     end
   end
 
@@ -39,7 +39,7 @@ defmodule Liquid.Process do
       output = Liquid.Template.parse(source, presets, Keyword.merge(options, extra_options))
       {:reply, {:ok, output}, options}
     rescue
-      x -> {:reply, {:error, x}, options}
+      x -> {:reply, {:error, x, __STACKTRACE__}, options}
     end
   end
 

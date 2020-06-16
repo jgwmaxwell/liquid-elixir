@@ -52,7 +52,6 @@ end
 defmodule IncludeTagTest do
   use ExUnit.Case
 
-  alias Liquid.Template, as: Template
   alias Liquid.Context, as: Context
 
   setup do

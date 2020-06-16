@@ -3,7 +3,6 @@ Code.require_file("../../test_helper.exs", __ENV__.file)
 defmodule Liquid.TemplateTest do
   use ExUnit.Case
 
-  alias Liquid.Template, as: Template
   alias Liquid.Parse, as: Parse
 
   setup do
