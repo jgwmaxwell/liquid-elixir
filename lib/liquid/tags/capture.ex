@@ -8,7 +8,7 @@ defmodule Liquid.Capture do
   end
 
   def render(output, %Block{markup: markup, nodelist: content}, %Context{} = context, options) do
-    variable_name = Liquid.variable_parser() |> Regex.run(markup) |> hd
+    variable_name = Liquid.Parse.variable_parser() |> Regex.run(markup) |> hd
     {block_output, context} = Liquid.Render.render([], content, context, options)
 
     result_assign =

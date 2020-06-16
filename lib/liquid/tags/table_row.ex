@@ -22,7 +22,7 @@ defmodule Liquid.TableRow do
   end
 
   @compile {:inline, syntax: 0}
-  def syntax, do: ~r/(\w+)\s+in\s+(#{Liquid.quoted_fragment()}+)/
+  def syntax, do: ~r/(\w+)\s+in\s+(#{Liquid.Parse.quoted_fragment()}+)/
 
   @doc """
   Parses and organises markup to set up iterator
@@ -45,7 +45,7 @@ defmodule Liquid.TableRow do
   defp parse_iterator(%Block{markup: markup}) do
     [[_, item | [orig_collection]]] = Regex.scan(syntax(), markup)
     collection = Expression.parse(orig_collection)
-    attributes = Liquid.tag_attributes() |> Regex.scan(markup)
+    attributes = Liquid.Parse.tag_attributes() |> Regex.scan(markup)
     limit = attributes |> parse_attribute("limit") |> Variable.create()
     offset = attributes |> parse_attribute("offset", "0") |> Variable.create()
 

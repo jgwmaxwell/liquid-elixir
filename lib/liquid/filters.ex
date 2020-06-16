@@ -502,10 +502,10 @@ defmodule Liquid.Filters do
       for arg <- args do
         case arg do
           %{} ->
-            for {k, v} <- arg, into: %{}, do: {k, Liquid.quote_matcher() |> Regex.replace(v, "")}
+            for {k, v} <- arg, into: %{}, do: {k, Liquid.Parse.quote_matcher() |> Regex.replace(v, "")}
 
           _ ->
-            Liquid.quote_matcher() |> Regex.replace(arg, "")
+            Liquid.Parse.quote_matcher() |> Regex.replace(arg, "")
         end
       end
       |> (fn items ->

@@ -63,7 +63,7 @@ defmodule Liquid.ForElse do
   end
 
   @compile {:inline, syntax: 0}
-  def syntax, do: ~r/(\w+)\s+in\s+(#{Liquid.quoted_fragment()}+)\s*(reversed)?/
+  def syntax, do: ~r/(\w+)\s+in\s+(#{Liquid.Parse.quoted_fragment()}+)\s*(reversed)?/
 
   def parse(%Block{nodelist: nodelist} = block, %Liquid.Template{} = t, _options) do
     block = %{block | iterator: parse_iterator(block)}
@@ -83,7 +83,7 @@ defmodule Liquid.ForElse do
     [[_, item | [orig_collection | reversed]]] = Regex.scan(syntax(), markup)
     collection = Expression.parse(orig_collection)
     reversed = !(reversed |> List.first() |> is_nil)
-    attributes = Liquid.tag_attributes() |> Regex.scan(markup)
+    attributes = Liquid.Parse.tag_attributes() |> Regex.scan(markup)
     limit = attributes |> parse_attribute("limit") |> Variable.create()
     offset = attributes |> parse_attribute("offset", "0") |> Variable.create()
 

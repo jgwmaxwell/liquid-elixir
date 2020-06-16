@@ -5,7 +5,7 @@ defmodule Liquid.Raw do
 
   @compile {:inline, full_token_possibly_invalid: 0}
   def full_token_possibly_invalid,
-    do: ~r/\A(.*)#{Liquid.tag_start()}\s*(\w+)\s*(.*)?#{Liquid.tag_end()}\z/m
+    do: ~r/\A(.*)#{Liquid.Parse.tag_start()}\s*(\w+)\s*(.*)?#{Liquid.Parse.tag_end()}\z/m
 
   def parse(%Block{name: name} = block, [h | t], accum, %Template{} = template, options) do
     if Regex.match?(Liquid.Raw.full_token_possibly_invalid(), h) do

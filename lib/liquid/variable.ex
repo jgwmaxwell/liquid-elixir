@@ -79,7 +79,7 @@ defmodule Liquid.Variable do
   def parse(markup) when is_binary(markup) do
     parsed_variable =
       if markup != "" do
-        Liquid.filter_parser()
+        Liquid.Parse.filter_parser()
         |> Regex.scan(markup)
         |> List.flatten()
         |> Enum.map(&String.trim/1)
@@ -102,7 +102,7 @@ defmodule Liquid.Variable do
       [_, filter] = ~r/\s*(\w+)/ |> Regex.scan(markup) |> hd()
 
       args =
-        Liquid.filter_arguments()
+        Liquid.Parse.filter_arguments()
         |> Regex.scan(markup)
         |> Enum.map(fn item ->
           case item do
