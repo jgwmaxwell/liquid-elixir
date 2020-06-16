@@ -52,5 +52,5 @@ defmodule Liquid.When do
   alias Liquid.Tag, as: Tag
   alias Liquid.Template, as: Template
 
-  def parse(%Tag{} = tag, %Template{} = t), do: {tag, t}
+  def parse(%Tag{} = tag, %Template{} = t, _options), do: {tag, t}
 end

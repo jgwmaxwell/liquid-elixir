@@ -7,7 +7,7 @@ defmodule Liquid do
   def parse_template(name, source, presets \\ %{}, extra_options \\ []),
     do: GenServer.call(name, {:parse_template, source, presets, extra_options}, @timeout)
 
-  def register_file_system(name, module, path),
+  def register_file_system(name, module, path \\ "/"),
     do: GenServer.cast(name, {:register_file_system, module, path})
 
   def clear_registers(name), do: GenServer.cast(name, {:clear_registers})

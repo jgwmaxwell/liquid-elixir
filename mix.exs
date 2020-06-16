@@ -39,8 +39,7 @@ defmodule Liquid.Mixfile do
       {:excoveralls, "~> 0.8", only: :test},
       {:jason, "~> 1.1", only: [:dev, :test]},
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:blankable, "~> 1.0.0"},
-      {:cachex, "~> 3.1.3"}
+      {:blankable, "~> 1.0.0"}
     ]
   end
 

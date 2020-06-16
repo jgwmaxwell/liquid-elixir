@@ -46,8 +46,10 @@ defmodule Liquid.Include do
 
     source_hash = :crypto.hash(:md5, source) |> Base.encode16()
 
+    cache_adapter = Keyword.get(options, :cache_adapter, Liquid.NoCacheAdapter)
+
     {_, t} =
-      Cachex.fetch(:parsed_template, "parsed_template|#{source_hash}", fn _ ->
+      cache_adapter.fetch(:parsed_template, "parsed_template|#{source_hash}", fn _ ->
         Template.parse(source, %{}, name)
       end)
 

@@ -301,9 +301,9 @@ defmodule Liquid.Break do
   alias Liquid.Context, as: Context
   alias Liquid.Template, as: Template
 
-  def parse(%Tag{} = tag, %Template{} = template), do: {tag, template}
+  def parse(%Tag{} = tag, %Template{} = template, _options), do: {tag, template}
 
-  def render(output, %Tag{}, %Context{} = context) do
+  def render(output, %Tag{}, %Context{} = context, _options) do
     {output, %{context | break: true}}
   end
 end
@@ -312,9 +312,9 @@ defmodule Liquid.Continue do
   alias Liquid.Tag, as: Tag
   alias Liquid.Context, as: Context
 
-  def parse(%Tag{} = tag, template), do: {tag, template}
+  def parse(%Tag{} = tag, template, _options), do: {tag, template}
 
-  def render(output, %Tag{}, %Context{} = context) do
+  def render(output, %Tag{}, %Context{} = context, _options) do
     {output, %{context | continue: true}}
   end
 end
@@ -322,9 +322,9 @@ end
 defmodule Liquid.IfChanged do
   alias Liquid.{Template, Block}
 
-  def parse(%Block{} = block, %Template{} = t), do: {block, t}
+  def parse(%Block{} = block, %Template{} = t, _options), do: {block, t}
 
-  def render(output, %Block{nodelist: nodelist}, context) do
+  def render(output, %Block{nodelist: nodelist}, context, _options) do
     case context.registers["changed"] do
       {l, r} when l != r -> Liquid.Render.render(output, nodelist, context)
       _ -> {output, context}

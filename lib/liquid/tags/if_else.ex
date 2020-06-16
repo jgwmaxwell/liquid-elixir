@@ -1,11 +1,11 @@
 defmodule Liquid.ElseIf do
-  def parse(%Liquid.Tag{} = tag, %Liquid.Template{} = t), do: {tag, t}
-  def render(_, _, _, _), do: raise("should never get here")
+  def parse(%Liquid.Tag{} = tag, %Liquid.Template{} = t, _options), do: {tag, t}
+  def render(_, _, _, _, _), do: raise("should never get here")
 end
 
 defmodule Liquid.Else do
-  def parse(%Liquid.Tag{} = tag, %Liquid.Template{} = t), do: {tag, t}
-  def render(_, _, _, _), do: raise("should never get here")
+  def parse(%Liquid.Tag{} = tag, %Liquid.Template{} = t, _options), do: {tag, t}
+  def render(_, _, _, _, _), do: raise("should never get here")
 end
 
 defmodule Liquid.IfElse do
