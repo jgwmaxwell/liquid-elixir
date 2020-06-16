@@ -14,16 +14,17 @@ defmodule Liquid.Template do
   def render(t, c \\ %{}, options)
 
   def render(%Template{} = t, %Context{} = c, options) do
+    registers = Keyword.get(options, :registers, %{})
+    new_registers =
+      c
+      |> Map.get(:registers, %{})
+      |> Map.merge(registers)
+
+    c = %{c | registers: new_registers}
     c = %{c | blocks: t.blocks}
     c = %{c | presets: t.presets}
     c = %{c | template: t}
     Render.render(t, c, options)
-  end
-
-  def render(%Template{} = t, %Context{global_filter: _global_filter} = context, options) do
-    registers = Keyword.get(options, :registers, %{})
-    context = %{context | registers: registers}
-    render(t, context, options)
   end
 
   def render(%Template{} = t, assigns, options) when is_map(assigns) do
