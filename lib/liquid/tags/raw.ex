@@ -8,11 +8,11 @@ defmodule Liquid.Raw do
     do: ~r/\A(.*)#{Liquid.Parse.tag_start()}\s*(\w+)\s*(.*)?#{Liquid.Parse.tag_end()}\z/m
 
   def parse(%Block{name: name} = block, [h | t], accum, %Template{} = template, options) do
-    if Regex.match?(Liquid.Raw.full_token_possibly_invalid(), h) do
+    if Regex.match?(full_token_possibly_invalid(), h) do
       block_delimiter = "end" <> to_string(name)
 
       regex_result =
-        Regex.scan(Liquid.Raw.full_token_possibly_invalid(), h, capture: :all_but_first)
+        Regex.scan(full_token_possibly_invalid(), h, capture: :all_but_first)
 
       [extra_data, endblock | _] = regex_result |> List.flatten()
 

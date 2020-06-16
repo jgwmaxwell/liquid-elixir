@@ -236,7 +236,7 @@ defmodule Liquid.Parse do
 
     {block, rest, template} =
       try do
-        mod.parse(block, rest, [], template)
+        mod.parse(block, rest, [], template, options)
       rescue
         UndefinedFunctionError -> parse(block, rest, [], template, options)
       end
