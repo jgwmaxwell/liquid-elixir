@@ -56,7 +56,7 @@ defmodule IncludeTagTest do
   alias Liquid.Context, as: Context
 
   setup do
-    start_supervised!({Liquid.Process,[name: :liquid]})
+    start_supervised!({Liquid.Process, [name: :liquid]})
     Liquid.register_file_system(:liquid, TestFileSystem)
     :ok
   end

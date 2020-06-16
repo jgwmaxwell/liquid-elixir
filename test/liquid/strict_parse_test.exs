@@ -60,7 +60,7 @@ defmodule Liquid.StrictParseTest do
     parsed_template = Liquid.parse_template(:liquid, template)
 
     assert "variable: 16, Liquid error: divided by 0, filename: root" ==
-      :liquid |> Liquid.render_template(parsed_template) |> elem(1)
+             :liquid |> Liquid.render_template(parsed_template) |> elem(1)
   end
 
   test "missing endtag parse time error" do
@@ -79,9 +79,8 @@ defmodule Liquid.StrictParseTest do
   test "bad filter in included file" do
     parsed_template = Liquid.parse_template(:liquid, "{% include 'bad_division' %}")
 
-
     assert "variable: 16, Liquid error: divided by 0, filename: bad_division" ==
-      :liquid |> Liquid.render_template(parsed_template) |> elem(1)
+             :liquid |> Liquid.render_template(parsed_template) |> elem(1)
   end
 
   test "unrecognized operator" do
@@ -89,7 +88,9 @@ defmodule Liquid.StrictParseTest do
       Liquid.parse_template(:liquid, "{% if 1 =! 2 %}ok{% endif %}")
     end
 
-    assert_raise SyntaxError, "Invalid variable name", fn -> Liquid.parse_template(:liquid, "{{%%%}}") end
+    assert_raise SyntaxError, "Invalid variable name", fn ->
+      Liquid.parse_template(:liquid, "{{%%%}}")
+    end
   end
 
   defp assert_syntax_error(markup) do

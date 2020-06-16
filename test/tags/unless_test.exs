@@ -5,7 +5,7 @@ defmodule Liquid.UnlessTest do
   alias Liquid.Template
 
   setup do
-    start_supervised!({Liquid.Process,[name: :liquid]})
+    start_supervised!({Liquid.Process, [name: :liquid]})
     :ok
   end
 

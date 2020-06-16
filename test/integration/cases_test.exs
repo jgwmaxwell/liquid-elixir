@@ -9,7 +9,7 @@ defmodule Liquid.Test.Integration.CasesTest do
         |> Jason.decode!()
 
   setup do
-    start_supervised!({Liquid.Process,[name: :liquid]})
+    start_supervised!({Liquid.Process, [name: :liquid]})
     :ok
   end
 

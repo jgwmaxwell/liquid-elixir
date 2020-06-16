@@ -6,7 +6,7 @@ defmodule StandardTagTest do
   alias Liquid.Template
 
   setup do
-    start_supervised!({Liquid.Process,[name: :liquid]})
+    start_supervised!({Liquid.Process, [name: :liquid]})
     :ok
   end
 
@@ -282,19 +282,32 @@ defmodule StandardTagTest do
     template = Liquid.parse_template(:liquid, code)
 
     {:ok, result, _} =
-      Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "menswear-jackets"}})
+      Liquid.render_template(:liquid, template, %{
+        "collection" => %{"handle" => "menswear-jackets"}
+      })
 
     assert "menswear" == result
 
     {:ok, result, _} =
-      Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "menswear-t-shirts"}})
+      Liquid.render_template(:liquid, template, %{
+        "collection" => %{"handle" => "menswear-t-shirts"}
+      })
 
     assert "menswear" == result
-    {:ok, result, _} = Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "x"}})
+
+    {:ok, result, _} =
+      Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "x"}})
+
     assert "womenswear" == result
-    {:ok, result, _} = Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "y"}})
+
+    {:ok, result, _} =
+      Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "y"}})
+
     assert "womenswear" == result
-    {:ok, result, _} = Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "z"}})
+
+    {:ok, result, _} =
+      Liquid.render_template(:liquid, template, %{"collection" => %{"handle" => "z"}})
+
     assert "womenswear" == result
   end
 

@@ -6,7 +6,7 @@ defmodule Liquid.RawTest do
   alias Liquid.Template, as: Template
 
   setup do
-    start_supervised!({Liquid.Process,[name: :liquid]})
+    start_supervised!({Liquid.Process, [name: :liquid]})
     :ok
   end
 

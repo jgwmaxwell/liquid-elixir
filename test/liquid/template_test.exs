@@ -43,10 +43,10 @@ defmodule Liquid.TemplateTest do
   end
 
   test :returns_assigns_from_assign_tags do
-    t =  Liquid.parse_template(:liquid, "{% assign foo = 'from returned assigns' %}{{ foo }}")
+    t = Liquid.parse_template(:liquid, "{% assign foo = 'from returned assigns' %}{{ foo }}")
     {:ok, rendered, context} = Liquid.render_template(:liquid, t)
     assert "from returned assigns" == rendered
-    t =  Liquid.parse_template(:liquid, "{{ foo }}")
+    t = Liquid.parse_template(:liquid, "{{ foo }}")
     {:ok, rendered, _} = Liquid.render_template(:liquid, t, context)
     assert "from returned assigns" == rendered
   end
@@ -92,7 +92,7 @@ defmodule Liquid.TemplateTest do
     {:ok, rendered, context} =
       Liquid.render_template(:liquid, t, %{"foo" => "from assigns"}, registers: %{test: "hallo"})
 
-      IO.inspect(context)
+    IO.inspect(context)
 
     assert "from assigns" == rendered
     assert %{test: "hallo"} == context.registers

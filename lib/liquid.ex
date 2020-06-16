@@ -1,11 +1,19 @@
 defmodule Liquid do
   @timeout 5_000
 
-  def render_template(name, template, context \\ %{}, extra_options \\ []),
-    do: GenServer.call(name, {:render_template, template, context, extra_options}, @timeout)
+  def render_template(name, template, context \\ %{}, extra_options \\ []) do
+    case GenServer.call(name, {:render_template, template, context, extra_options}, @timeout) do
+      {:ok, v} -> v
+      {:error, error} -> raise error
+    end
+  end
 
-  def parse_template(name, source, presets \\ %{}, extra_options \\ []),
-    do: GenServer.call(name, {:parse_template, source, presets, extra_options}, @timeout)
+  def parse_template(name, source, presets \\ %{}, extra_options \\ []) do
+    case GenServer.call(name, {:parse_template, source, presets, extra_options}, @timeout) do
+      {:ok, v} -> v
+      {:error, error} -> raise error
+    end
+  end
 
   def register_file_system(name, module, path \\ "/"),
     do: GenServer.cast(name, {:register_file_system, module, path})

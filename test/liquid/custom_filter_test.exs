@@ -18,7 +18,7 @@ defmodule Liquid.CustomFilterTest do
   end
 
   setup_all do
-    start_supervised!({Liquid.Process,[name: :liquid]})
+    start_supervised!({Liquid.Process, [name: :liquid]})
     Liquid.add_filters(:liquid, MyFilter)
     Liquid.add_filters(:liquid, MyFilterTwo)
     Liquid.add_filters(:liquid, FilterNameOverride)

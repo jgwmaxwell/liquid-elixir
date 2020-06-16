@@ -4,7 +4,7 @@ defmodule Liquid.Tags.IfElseTagTest do
   use ExUnit.Case
 
   setup do
-    start_supervised!({Liquid.Process,[name: :liquid]})
+    start_supervised!({Liquid.Process, [name: :liquid]})
     :ok
   end
 
@@ -303,7 +303,7 @@ defmodule Liquid.Tags.IfElseTagTest do
   end
 
   defp assert_result(expected, markup, assigns \\ %{}) do
-    t = Liquid.parse_template(:liquid,markup)
+    t = Liquid.parse_template(:liquid, markup)
     {:ok, rendered, _} = Liquid.render_template(:liquid, t, assigns)
     assert rendered == expected
   end

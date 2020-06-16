@@ -16,7 +16,7 @@ defmodule Liquid.CustomTagTest do
   end
 
   setup_all do
-    start_supervised!({Liquid.Process,[name: :liquid]})
+    start_supervised!({Liquid.Process, [name: :liquid]})
     Liquid.register_tags(:liquid, "minus_one", MinusOneTag, Tag)
     :ok
   end

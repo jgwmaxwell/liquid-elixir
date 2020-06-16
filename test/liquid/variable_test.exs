@@ -127,7 +127,7 @@ defmodule VariableResolutionTest do
   use ExUnit.Case
 
   setup do
-    start_supervised!({Liquid.Process,[name: :liquid]})
+    start_supervised!({Liquid.Process, [name: :liquid]})
     :ok
   end
 
@@ -135,7 +135,10 @@ defmodule VariableResolutionTest do
     template = Liquid.parse_template(:liquid, "{{test}}")
     {:ok, rendered, _} = Liquid.render_template(:liquid, template, %{"test" => "worked"})
     assert "worked" == rendered
-    {:ok, rendered, _} = Liquid.render_template(:liquid, template, %{"test" => "worked wonderfully"})
+
+    {:ok, rendered, _} =
+      Liquid.render_template(:liquid, template, %{"test" => "worked wonderfully"})
+
     assert "worked wonderfully" == rendered
   end
 
@@ -143,7 +146,10 @@ defmodule VariableResolutionTest do
     template = Liquid.parse_template(:liquid, "  {{ test }}  ")
     {:ok, rendered, _} = Liquid.render_template(:liquid, template, %{"test" => "worked"})
     assert "  worked  " == rendered
-    {:ok, rendered, _} = Liquid.render_template(:liquid, template, %{"test" => "worked wonderfully"})
+
+    {:ok, rendered, _} =
+      Liquid.render_template(:liquid, template, %{"test" => "worked wonderfully"})
+
     assert "  worked wonderfully  " == rendered
   end
 
@@ -155,7 +161,10 @@ defmodule VariableResolutionTest do
 
   test :hash_scoping do
     template = Liquid.parse_template(:liquid, "{{ test.test }}")
-    {:ok, rendered, _} = Liquid.render_template(:liquid, template, %{"test" => %{"test" => "worked"}})
+
+    {:ok, rendered, _} =
+      Liquid.render_template(:liquid, template, %{"test" => %{"test" => "worked"}})
+
     assert "worked" == rendered
   end
 
@@ -166,20 +175,35 @@ defmodule VariableResolutionTest do
   end
 
   test :reuse_parsed_template do
-    template = Liquid.parse_template(:liquid, "{{ greeting }} {{ name }}", %{"greeting" => "Goodbye"})
+    template =
+      Liquid.parse_template(:liquid, "{{ greeting }} {{ name }}", %{"greeting" => "Goodbye"})
+
     assert %{"greeting" => "Goodbye"} == template.presets
-    {:ok, rendered, _} = Liquid.render_template(:liquid, template, %{"greeting" => "Hello", "name" => "Tobi"})
+
+    {:ok, rendered, _} =
+      Liquid.render_template(:liquid, template, %{"greeting" => "Hello", "name" => "Tobi"})
+
     assert "Hello Tobi" == rendered
-    {:ok, rendered, _} = Liquid.render_template(:liquid, template, %{"greeting" => "Hello", "unknown" => "Tobi"})
+
+    {:ok, rendered, _} =
+      Liquid.render_template(:liquid, template, %{"greeting" => "Hello", "unknown" => "Tobi"})
+
     assert "Hello " == rendered
-    {:ok, rendered, _} = Liquid.render_template(:liquid, template, %{"greeting" => "Hello", "name" => "Brian"})
+
+    {:ok, rendered, _} =
+      Liquid.render_template(:liquid, template, %{"greeting" => "Hello", "name" => "Brian"})
+
     assert "Hello Brian" == rendered
     {:ok, rendered, _} = Liquid.render_template(:liquid, template, %{"name" => "Brian"})
     assert "Goodbye Brian" == rendered
   end
 
   test :assigns_not_polluted_from_template do
-    template = Liquid.parse_template(:liquid, "{{ test }}{% assign test = 'bar' %}{{ test }}", %{"test" => "baz"})
+    template =
+      Liquid.parse_template(:liquid, "{{ test }}{% assign test = 'bar' %}{{ test }}", %{
+        "test" => "baz"
+      })
+
     {:ok, rendered, _} = Liquid.render_template(:liquid, template)
     assert "bazbar" == rendered
     {:ok, rendered, _} = Liquid.render_template(:liquid, template)

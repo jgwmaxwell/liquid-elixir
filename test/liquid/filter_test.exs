@@ -7,7 +7,7 @@ defmodule Liquid.FilterTest do
   alias Liquid.Filters.Functions
 
   setup do
-    start_supervised!({Liquid.Process,[name: :liquid]})
+    start_supervised!({Liquid.Process, [name: :liquid]})
     :ok
   end
 

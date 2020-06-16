@@ -8,9 +8,11 @@ defmodule Liquid.GlobalFilterTest do
     def counting_bees(input) when is_binary(input), do: input <> " One, tw.. Ouch!"
   end
 
-
   setup do
-    start_supervised!({Liquid.Process, [name: :liquid, global_filter: &MyFilter.counting_sheeps/1]})
+    start_supervised!(
+      {Liquid.Process, [name: :liquid, global_filter: &MyFilter.counting_sheeps/1]}
+    )
+
     :ok
   end
 

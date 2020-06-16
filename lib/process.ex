@@ -22,7 +22,12 @@ defmodule Liquid.Process do
         _from,
         options
       ) do
-    {:reply, Liquid.Template.render(template, context, Keyword.merge(options, extra_options)), options}
+    try do
+      output = Liquid.Template.render(template, context, Keyword.merge(options, extra_options))
+      {:reply, {:ok, output}, options}
+    rescue
+      x -> {:reply, {:error, x}, options}
+    end
   end
 
   def handle_call(
@@ -30,8 +35,12 @@ defmodule Liquid.Process do
         _from,
         options
       ) do
-    reply = Liquid.Template.parse(source, presets, Keyword.merge(options, extra_options))
-    {:reply, reply, options}
+    try do
+      output = Liquid.Template.parse(source, presets, Keyword.merge(options, extra_options))
+      {:reply, {:ok, output}, options}
+    rescue
+      x -> {:reply, {:error, x}, options}
+    end
   end
 
   def handle_call({:registers}, options), do: {:reply, Keyword.get(options, :extra_tags), options}
