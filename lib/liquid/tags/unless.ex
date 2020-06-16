@@ -20,7 +20,7 @@ defmodule Liquid.Unless do
         context,
         options
       ) do
-    condition = Condition.evaluate(condition, context)
+    condition = Condition.evaluate(condition, context, options)
     conditionlist = if condition, do: elselist, else: nodelist
     Render.render(output, conditionlist, context, options)
   end
