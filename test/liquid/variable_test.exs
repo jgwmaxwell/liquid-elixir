@@ -6,6 +6,11 @@ defmodule Liquid.VariableTest do
   alias Liquid.Variable, as: Var
   alias Liquid.Template
 
+  setup do
+    start_supervised!({Liquid.Process, [name: :liquid]})
+    :ok
+  end
+
   test :variable do
     v = Var.create("hello")
     assert "hello" == v.name
@@ -60,8 +65,8 @@ defmodule Liquid.VariableTest do
   end
 
   test "render error mode strict/lax" do
-    template = "{{ 16 | divided_by: 0 }}"
-    result = template |> Template.parse() |> Template.render() |> elem(1)
+    parsed_template = Liquid.parse_template(:liquid, "{{ 16 | divided_by: 0 }}")
+    result = Liquid.render_template(:liquid, parsed_template) |> elem(1)
     assert result == "variable: 16, Liquid error: divided by 0, filename: root"
 
     Application.put_env(:liquid, :error_mode, :strict)

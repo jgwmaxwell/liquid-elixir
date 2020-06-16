@@ -217,7 +217,7 @@ defmodule Liquid.ForElse do
         {output, new_context}
 
       {true, _} ->
-        Render.render(output, nodelist, context)
+        Render.render(output, nodelist, context, options)
 
       _ ->
         {output, context}
