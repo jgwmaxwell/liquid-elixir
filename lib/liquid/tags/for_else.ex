@@ -324,9 +324,9 @@ defmodule Liquid.IfChanged do
 
   def parse(%Block{} = block, %Template{} = t, _options), do: {block, t}
 
-  def render(output, %Block{nodelist: nodelist}, context, _options) do
+  def render(output, %Block{nodelist: nodelist}, context, options) do
     case context.registers["changed"] do
-      {l, r} when l != r -> Liquid.Render.render(output, nodelist, context)
+      {l, r} when l != r -> Liquid.Render.render(output, nodelist, context, options)
       _ -> {output, context}
     end
   end

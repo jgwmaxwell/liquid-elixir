@@ -11,7 +11,7 @@ defimpl Liquid.Matcher, for: Liquid.Context do
 
   def match(current, []), do: current
 
-  def match(%{assigns: assigns, presets: presets} = c, [key | _] = parts)
+  def match(%{assigns: assigns, presets: presets}, [key | _] = parts)
       when is_binary(key) do
     current =
       cond do
@@ -33,7 +33,7 @@ defimpl Liquid.Matcher, for: Map do
   def match(current, ["size" | _]), do: current |> map_size
 
   def match(current, [<<?[, index::binary>> | parts]) do
-    index = index |> String.split("]") |> hd |> String.replace(Liquid.quote_matcher(), "")
+    index = index |> String.split("]") |> hd |> String.replace(Liquid.Parse.quote_matcher(), "")
     match(current, [index | parts])
   end
 
