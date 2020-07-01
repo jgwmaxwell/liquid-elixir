@@ -15,7 +15,7 @@ defp deps do
 end
 ```
 
-You can start the application as a children to your app:
+You can start the application as a child to your app:
 
 ```elixir
 children = [
@@ -52,7 +52,7 @@ Or start it manually:
 
 where option is a keyword list, same as in config.
 
-Every option can be overrided by a keyword list passed as last argument to `Liquid.parse_template` / `Liquid.render_template`.
+Every option can be overridden by a keyword list passed as last argument to `Liquid.parse_template` / `Liquid.render_template`.
 
 Compile a template from a string:
 
@@ -68,7 +68,7 @@ For registers you might want to use in custom tags you can assign them like this
 
 The tests should give a pretty good idea of the features implemented so far.
 
-All of public API can be viewed inside `Liquid` module.
+All of the public API can be viewed inside the `Liquid` module.
 
 ## Custom tags and filters
 
@@ -96,7 +96,7 @@ defmodule ExampleBlock do
 end
 ```
 
-and than include them in your configuration, as seen above.
+and then include them in your configuration, as shown above.
 
 Another option is to set up the tag using:
 `Liquid.register_tags(:liquid, "minus_one", MinusOneTag, Liquid.Tag)`,
@@ -105,12 +105,12 @@ and for filters you should use
 `Liquid.add_filters(:liquid, MyFilters)`
 
 #### Global Filters
-It's also possible to apply global filter to all rendered variables setting up in the config:
+It's also possible to apply a global filter to all rendered variables setting up in the config:
 ``` elixir
 [global_filter: &MyFilter.counting_sheeps/1]
 ```
-or adding a `"global_filter"` value to options for `Liquid.render_template` function:
-`Liquid.render_template(:liquid, :tpl, %{some: context}, global_filter: &MyFilter.counting_sheeps/1)` (you need to define filter function first)
+or adding a `"global_filter"` value to options for the `Liquid.render_template` function:
+`Liquid.render_template(:liquid, :tpl, %{some: context}, global_filter: &MyFilter.counting_sheeps/1)` (you need to define the filter function first)
 
 
 ## Context assignment
