@@ -94,4 +94,28 @@ defmodule Liquid.TemplateTest do
     assert "from assigns" == rendered
     assert %{test: "hallo"} == context.registers
   end
+
+  test "accessing map from liquid" do
+    t = Liquid.parse_template(:liquid, "{{ foo[bar] }}")
+
+    {:ok, rendered, _} = Liquid.render_template(:liquid, t, %{"foo" => %{ "baz" => "qux" }, "bar" => "baz"})
+
+    assert "qux" == rendered
+  end
+
+  test "accessing map by raw key from liquid" do
+    t = Liquid.parse_template(:liquid, "{{ foo[bar] }}")
+
+    {:ok, rendered, _} = Liquid.render_template(:liquid, t, %{"foo" => %{ "bar" => "qux" }})
+
+    assert "qux" == rendered
+  end
+
+  test "when accessing map, looked up key must have priority over raw one" do
+    t = Liquid.parse_template(:liquid, "{{ foo[bar] }}")
+
+    {:ok, rendered, _} = Liquid.render_template(:liquid, t, %{"foo" => %{ "bar" => "qux", "baz" => "correct" }, "bar" => "baz" })
+
+    assert "correct" == rendered
+  end
 end

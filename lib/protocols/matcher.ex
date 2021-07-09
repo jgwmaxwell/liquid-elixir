@@ -41,7 +41,16 @@ defimpl Liquid.Matcher, for: Map do
     current |> Liquid.Matcher.match(name, full_context) |> Liquid.Matcher.match(parts, full_context)
   end
 
-  def match(current, key, _full_context) when is_binary(key), do: current[key]
+  def match(current, key, full_context) when is_binary(key) do
+    item =
+      key
+      |> Liquid.Variable.create()
+      |> Liquid.Variable.lookup(full_context, [])
+      |> elem(0)
+      |> Kernel.||(key)
+
+    current[item]
+  end
 end
 
 defimpl Liquid.Matcher, for: List do
